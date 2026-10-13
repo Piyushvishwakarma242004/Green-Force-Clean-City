@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Neighborhood Issues | Green Force, Clean City!</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            padding-top: 100px; /* Added to prevent overlap with fixed navbar */
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 1.5rem 2rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            color: #27ae60;
+            font-size: 2rem;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-item {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #27ae60;
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .nav-item:hover {
+            color: #27ae60;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .status-box {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .box {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .issued { background: #e74c3c; }
+        .in-progress { background: #f39c12; }
+        .solved { background: #2ecc71; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #3498db;
+            color: white;
+        }
+        .chart-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 1.5rem;
+            }
+            .nav-item {
+                font-size: 1rem;
+            }
+            .nav-brand {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">Green Force, Clean City!</a>
+            <div class="nav-menu">
+                <a href="home.html" class="nav-item">Home</a>
+                <a href="Report.html" class="nav-item">Report Issue</a>
+                <a href="Track.html" class="nav-item">Track Issues</a>
+                <a href="Admin.html" class="nav-item">Admin</a>
+                <a href="contact.html" class="nav-item">Contact</a>
+                <a href="Login.html" class="nav-item" onclick="openModal()">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Admin Dashboard - Neighborhood Issues</h2>
+        
+        <div class="status-box">
+            <div class="box issued">Issued: <span id="issuedCount">0</span></div>
+            <div class="box in-progress">In Progress: <span id="progressCount">0</span></div>
+            <div class="box solved">Solved: <span id="solvedCount">0</span></div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="issueTable">
+                <!-- Data will be inserted dynamically -->
+            </tbody>
+        </table>
+
+        <div class="chart-container">
+            <h3>Issue Statistics</h3>
+            <canvas id="issueChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Sample data (Replace with API call to fetch actual data)
+        const issues = [
+            { id: 1, title: "Pothole on Main St", description: "Large pothole causing accidents", status: "Issued" },
+            { id: 2, title: "Broken Streetlight", description: "Streetlight not working", status: "In Progress" },
+            { id: 3, title: "Illegal Dumping", description: "Trash dumped in park", status: "Solved" },
+            { id: 4, title: "Water Leak", description: "Pipe leaking near 5th Ave", status: "Issued" },
+            { id: 5, title: "Traffic Signal Malfunction", description: "Signal stuck on red", status: "Solved" }
+        ];
+
+        function updateDashboard() {
+            let issuedCount = 0, progressCount = 0, solvedCount = 0;
+            const issueTable = document.getElementById("issueTable");
+            issueTable.innerHTML = ""; // Clear table before inserting
+
+            issues.forEach(issue => {
+                const row = `<tr>
+                    <td>${issue.id}</td>
+                    <td>${issue.title}</td>
+                    <td>${issue.description}</td>
+                    <td>${issue.status}</td>
+                </tr>`;
+                issueTable.innerHTML += row;
+
+                if (issue.status === "Issued") issuedCount++;
+                if (issue.status === "In Progress") progressCount++;
+                if (issue.status === "Solved") solvedCount++;
+            });
+
+            document.getElementById("issuedCount").textContent = issuedCount;
+            document.getElementById("progressCount").textContent = progressCount;
+            document.getElementById("solvedCount").textContent = solvedCount;
+
+            drawChart(issuedCount, progressCount, solvedCount);
+        }
+
+        function drawChart(issued, inProgress, solved) {
+            const ctx = document.getElementById("issueChart").getContext("2d");
+            new Chart(ctx, {
+                type: "doughnut",
+                data: {
+                    labels: ["Issued", "In Progress", "Solved"],
+                    datasets: [{
+                        data: [issued, inProgress, solved],
+                        backgroundColor: ["#e74c3c", "#f39c12", "#2ecc71"]
+                    }]
+                }
+            });
+        }
+
+        function openModal() {
+            alert('Login modal would open here');
+        }
+
+        updateDashboard();
+    </script>
+<script src="auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Issues - Green Force, Clean City!</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',Arial,sans-serif}
+  body{background:#f5f7f6;color:#333;padding-top:100px}
+  .navbar{background:rgba(255,255,255,.98);padding:1.5rem 2rem;position:fixed;top:0;width:100%;z-index:1000;box-shadow:0 4px 15px rgba(0,0,0,.05)}
+  .nav-container{max-width:1300px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+  .nav-brand{color:#27ae60;font-size:2rem;font-weight:700;text-decoration:none}
+  .nav-menu{display:flex;gap:2.5rem}
+  .nav-item{color:#333;text-decoration:none;font-weight:500;font-size:1.1rem}
+  .nav-item:hover{color:#27ae60}
+  .wrap{max-width:1100px;margin:0 auto;padding:20px}
+  h1{color:#27ae60;text-align:center;margin-bottom:20px}
+  .box{background:#fff;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.08);padding:18px;margin-bottom:18px}
+  .stats{display:flex;gap:12px;flex-wrap:wrap}
+  .stat{flex:1;min-width:120px;text-align:center;color:#fff;border-radius:10px;padding:12px;font-weight:700}
+  .s-issued{background:#e74c3c}.s-ver{background:#8e44ad}.s-prog{background:#f39c12}.s-solved{background:#2ecc71}.s-total{background:#3498db}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  input,select,button{padding:10px 12px;border:1px solid #ccc;border-radius:8px;font-size:1rem}
+  input{flex:1;min-width:150px}
+  button{background:#27ae60;color:#fff;border:none;cursor:pointer;font-weight:600}
+  button:hover{background:#219653}
+  button.sec{background:#7f8c8d}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{background:#fff;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.08);overflow:hidden;cursor:pointer}
+  .card img{width:100%;height:170px;object-fit:cover;background:#ddd}
+  .card .b{padding:14px}
+  .card h3{color:#27ae60;margin-bottom:6px}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;color:#fff;font-size:.8rem;font-weight:700}
+  .Issued{background:#e74c3c}.Verified{background:#8e44ad}.InProgress{background:#f39c12}.Solved{background:#2ecc71}
+  .muted{color:#777;font-size:.9rem;margin-top:6px}
+  .pager{display:flex;justify-content:center;gap:12px;align-items:center;margin-top:18px}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center;padding:16px}
+  .modal{background:#fff;border-radius:14px;max-width:560px;width:100%;max-height:90vh;overflow:auto;padding:20px}
+  .modal img{width:100%;border-radius:10px;margin:10px 0}
+  .tl{margin-top:10px;border-left:3px solid #27ae60;padding-left:14px}
+  .tl div{margin-bottom:10px}
+  #msg{text-align:center;color:#c0392b;margin:10px}
+  @media(max-width:768px){.nav-menu{gap:1rem}.nav-item{font-size:.9rem}.nav-brand{font-size:1.3rem}}
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="nav-container">
+  <a href="#" class="nav-brand">Green Force, Clean City!</a>
+  <div class="nav-menu">
+    <a href="home.html" class="nav-item">Home</a>
+    <a href="Report.html" class="nav-item">Report Issue</a>
+    <a href="Track.html" class="nav-item">Track Issues</a>
+    <a href="Admin.html" class="nav-item">Admin</a>
+    <a href="contact.html" class="nav-item">Contact</a>
+    <a href="Login.html" class="nav-item">Login</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <h1 id="pageTitle">Track City Issues</h1>
+
+  <div class="box"><div class="stats" id="stats"></div></div>
+
+  <div class="box">
+    <div class="row">
+      <input id="code" placeholder="Have a tracking code? e.g. GF-7K2M9X">
+      <button id="codeBtn">Track</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="row">
+      <select id="category">
+        <option value="">All categories</option>
+        <option value="water">Water</option>
+        <option value="mosquito">Mosquito</option>
+        <option value="garbage">Garbage</option>
+        <option value="pothole">Pothole</option>
+        <option value="streetlight">Streetlight</option>
+        <option value="other">Other</option>
+      </select>
+      <select id="status">
+        <option value="">All statuses</option>
+        <option value="ISSUED">Issued</option>
+        <option value="VERIFIED">Verified</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="SOLVED">Solved</option>
+      </select>
+      <input id="q" placeholder="Search description / location">
+      <button id="searchBtn">Search</button>
+    </div>
+  </div>
+
+  <div id="msg"></div>
+  <div class="grid" id="list"></div>
+  <div class="pager">
+    <button class="sec" id="prev">Previous</button>
+    <span id="pageInfo"></span>
+    <button class="sec" id="next">Next</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+
+<script src="auth.js"></script>
+<script>
+(function () {
+  var page = 0, totalPages = 0;
+  var $ = function (id) { return document.getElementById(id); };
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined && text !== null) e.textContent = text;   // textContent => user text can never run as HTML
+    return e;
+  }
+  function badgeClass(label) { return label.replace(/\s/g, ''); }
+  function fmt(t) { return t ? new Date(t).toLocaleString() : ''; }
+  function setMsg(t) { $('msg').textContent = t || ''; }
+
+  function api(url) {
+    return fetch(url).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) {
+        if (!r.ok) throw new Error(d.message || ('Error ' + r.status));
+        return d;
+      });
+    });
+  }
+
+  function loadStats() {
+    api('/api/issues/stats').then(function (s) {
+      var box = $('stats'); box.textContent = '';
+      [['s-total', 'Total', s.total], ['s-issued', 'Issued', s.issued], ['s-ver', 'Verified', s.verified],
+       ['s-prog', 'In Progress', s.inProgress], ['s-solved', 'Solved', s.solved]].forEach(function (x) {
+        box.appendChild(el('div', 'stat ' + x[0], x[1] + ': ' + x[2]));
+      });
+    }).catch(function () {});
+  }
+
+  function card(i) {
+    var c = el('div', 'card');
+    if (i.imageUrl) { var img = el('img'); img.src = i.imageUrl; img.alt = i.category; c.appendChild(img); }
+    var b = el('div', 'b');
+    b.appendChild(el('h3', null, i.category));
+    b.appendChild(el('span', 'badge ' + badgeClass(i.status), i.status));
+    b.appendChild(el('p', 'muted', i.description.length > 110 ? i.description.slice(0, 110) + '...' : i.description));
+    b.appendChild(el('p', 'muted', i.trackingCode + ' | ' + fmt(i.createdAt)));
+    c.appendChild(b);
+    c.onclick = function () { openDetails(i); };
+    return c;
+  }
+
+  function load() {
+    setMsg('');
+    var p = new URLSearchParams();
+    if ($('category').value) p.set('category', $('category').value);
+    if ($('status').value) p.set('status', $('status').value);
+    if ($('q').value.trim()) p.set('q', $('q').value.trim());
+    p.set('page', page); p.set('size', 9);
+    api('/api/issues?' + p.toString()).then(function (d) {
+      var list = $('list'); list.textContent = '';
+      d.content.forEach(function (i) { list.appendChild(card(i)); });
+      totalPages = d.totalPages;
+      $('pageInfo').textContent = d.totalElements === 0 ? 'No issues found' : 'Page ' + (d.page + 1) + ' of ' + d.totalPages;
+      $('prev').disabled = d.page <= 0;
+      $('next').disabled = d.page + 1 >= d.totalPages;
+    }).catch(function (e) { setMsg(e.message); });
+  }
+
+  function openDetails(i) {
+    var m = $('modal'); m.textContent = '';
+    m.appendChild(el('h2', null, i.category + '  (' + i.trackingCode + ')'));
+    m.appendChild(el('span', 'badge ' + badgeClass(i.status), i.status));
+    if (i.imageUrl) { var img = el('img'); img.src = i.imageUrl; img.alt = i.category; m.appendChild(img); }
+    m.appendChild(el('p', null, i.description));
+    if (i.location) m.appendChild(el('p', 'muted', 'Location: ' + i.location));
+    if (i.latitude != null && i.longitude != null) {
+      var a = el('a', null, 'Open in Google Maps');
+      a.href = 'https://www.google.com/maps?q=' + encodeURIComponent(i.latitude + ',' + i.longitude);
+      a.target = '_blank'; a.rel = 'noopener';
+      m.appendChild(a);
+    }
+    m.appendChild(el('h3', null, 'Progress'));
+    var tl = el('div', 'tl'); m.appendChild(tl);
+    api('/api/issues/' + i.id + '/history').then(function (h) {
+      h.forEach(function (u) {
+        var row = el('div');
+        row.appendChild(el('strong', null, u.to));
+        row.appendChild(el('div', 'muted', fmt(u.at) + (u.note ? ' - ' + u.note : '')));
+        tl.appendChild(row);
+      });
+    }).catch(function (e) { tl.textContent = e.message; });
+    var close = el('button', 'sec', 'Close'); close.style.marginTop = '14px';
+    close.onclick = function () { $('overlay').style.display = 'none'; };
+    m.appendChild(close);
+    $('overlay').style.display = 'flex';
+  }
+
+  $('overlay').onclick = function (e) { if (e.target === $('overlay')) $('overlay').style.display = 'none'; };
+  $('searchBtn').onclick = function () { page = 0; load(); };
+  $('category').onchange = $('status').onchange = function () { page = 0; load(); };
+  $('q').onkeydown = function (e) { if (e.key === 'Enter') { page = 0; load(); } };
+  $('prev').onclick = function () { if (page > 0) { page--; load(); } };
+  $('next').onclick = function () { if (page + 1 < totalPages) { page++; load(); } };
+  $('codeBtn').onclick = function () {
+    var c = $('code').value.trim();
+    if (!c) return;
+    setMsg('');
+    api('/api/issues/track/' + encodeURIComponent(c)).then(openDetails).catch(function (e) { setMsg(e.message); });
+  };
+
+  var titles = { water: 'Water Issues', mosquito: 'Mosquito Issues', garbage: 'Garbage Issues',
+                 pothole: 'Pothole Issues', streetlight: 'Streetlight Issues', other: 'Other Issues' };
+  var wanted = (new URLSearchParams(window.location.search).get('category') || '').toLowerCase();
+  if (titles[wanted]) {
+    $('category').value = wanted;
+    $('pageTitle').textContent = titles[wanted];
+    document.title = titles[wanted] + ' - Green Force, Clean City!';
+  }
+
+  loadStats();
+  load();
+})();
+</script>
+</body>
+</html>

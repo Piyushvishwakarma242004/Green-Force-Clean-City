@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - Green Force, Clean City!</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',Arial,sans-serif}
+  body{min-height:100vh;background:linear-gradient(135deg,#27ae60,#219653);display:flex;justify-content:center;align-items:center;padding:110px 16px 30px}
+  .navbar{background:rgba(255,255,255,.98);padding:1.5rem 2rem;position:fixed;top:0;width:100%;z-index:1000;box-shadow:0 4px 15px rgba(0,0,0,.05)}
+  .nav-container{max-width:1300px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+  .nav-brand{color:#27ae60;font-size:2rem;font-weight:700;text-decoration:none}
+  .nav-menu{display:flex;gap:2.5rem}
+  .nav-item{color:#333;text-decoration:none;font-weight:500;font-size:1.1rem}
+  .nav-item:hover{color:#27ae60}
+  .card{background:#fff;padding:2.5rem;border-radius:25px;box-shadow:0 15px 40px rgba(0,0,0,.15);width:100%;max-width:480px}
+  h1{color:#27ae60;text-align:center;font-size:2.2rem;margin-bottom:.4rem}
+  .sub{text-align:center;color:#666;margin-bottom:1.6rem}
+  label{display:block;font-weight:600;margin:12px 0 5px;color:#444}
+  input{width:100%;padding:.9rem 1rem;border:2px solid #ddd;border-radius:10px;font-size:1rem}
+  input:focus{outline:none;border-color:#27ae60}
+  button{width:100%;margin-top:20px;padding:1rem;background:#27ae60;color:#fff;border:none;border-radius:10px;font-size:1.1rem;font-weight:700;cursor:pointer}
+  button:hover{background:#219653}
+  button:disabled{opacity:.6;cursor:default}
+  #err{color:#c0392b;text-align:center;margin-top:12px;min-height:1.2em}
+  .alt{text-align:center;margin-top:16px}
+  .alt a{color:#27ae60;font-weight:600;text-decoration:none}
+  @media(max-width:768px){.nav-menu{gap:1rem}.nav-item{font-size:.9rem}.nav-brand{font-size:1.3rem}}
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="nav-container">
+  <a href="#" class="nav-brand">Green Force, Clean City!</a>
+  <div class="nav-menu">
+    <a href="home.html" class="nav-item">Home</a>
+    <a href="Report.html" class="nav-item">Report Issue</a>
+    <a href="Track.html" class="nav-item">Track Issues</a>
+    <a href="Admin.html" class="nav-item">Admin</a>
+    <a href="contact.html" class="nav-item">Contact</a>
+    <a href="Login.html" class="nav-item">Login</a>
+  </div>
+</div></nav>
+
+<div class="card">
+  <h1>Join the Force!</h1>
+  <p class="sub">Create your Green Force account</p>
+
+  <label for="name">Full name</label>
+  <input id="name" type="text" maxlength="100" autocomplete="name">
+  <label for="email">Email</label>
+  <input id="email" type="email" maxlength="150" autocomplete="email">
+  <label for="password">Password (min 8 characters)</label>
+  <input id="password" type="password" maxlength="72" autocomplete="new-password">
+  <label for="confirm">Confirm password</label>
+  <input id="confirm" type="password" maxlength="72" autocomplete="new-password">
+
+  <button id="go">Create account</button>
+  <div id="err"></div>
+  <p class="alt">Already have an account? <a href="Login.html">Login</a></p>
+</div>
+
+<script src="auth.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  function err(t) { $('err').textContent = t || ''; }
+
+  function submit() {
+    err('');
+    var name = $('name').value.trim(), email = $('email').value.trim();
+    var password = $('password').value, confirm = $('confirm').value;
+    if (!name) return err('Please enter your name');
+    if (!/^[\w.+-]+@([\w-]+\.)+[\w-]{2,}$/.test(email)) return err('Please enter a valid email');
+    if (password.length < 8) return err('Password must be at least 8 characters');
+    if (password !== confirm) return err('Passwords do not match');
+
+    $('go').disabled = true;
+    GF.api('/api/auth/signup', { method: 'POST', body: JSON.stringify({ name: name, email: email, password: password }) })
+      .then(function (d) {
+        GF.setSession(d);
+        window.location.href = 'home.html';
+      })
+      .catch(function (e) { err(e.message); $('go').disabled = false; });
+  }
+
+  $('go').onclick = submit;
+  ['name', 'email', 'password', 'confirm'].forEach(function (id) {
+    $(id).addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Force, Clean City!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background: #f4f7f6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 1.5rem 2rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            color: #27ae60;
+            font-size: 2rem;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-item {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #27ae60;
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .nav-item:hover {
+            color: #27ae60;
+        }
+
+        /* Hero */
+        .hero {
+            height: 100vh;
+            /* Updated background image with a reliable URL */
+            background: url('https://images.unsplash.com/photo-1508615039622-50332e3d5c0f?q=80&w=2070&auto=format&fit=crop') no-repeat center/cover;
+            /* Fallback gradient if image fails */
+            background: linear-gradient(135deg, #27ae60, #219653) fallback;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.6));
+        }
+
+        .hero-content {
+            position: relative;
+            color: white;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .cta-button {
+            background: #27ae60;
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(39,174,96,0.4);
+            transition: all 0.4s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            background: #219653;
+            box-shadow: 0 8px 20px rgba(39,174,96,0.6);
+        }
+
+        /* Features */
+        .features {
+            padding: 6rem 2rem;
+            background: white;
+            text-align: center;
+        }
+
+        .features h2 {
+            margin-bottom: 4rem;
+            color: #27ae60;
+            font-size: 2.5rem;
+        }
+
+        .feature-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+        }
+
+        .feature-card {
+            padding: 2.5rem;
+            background: #f9f9f9;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: #27ae60;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            text-align: center;
+        }
+
+        .how-it-works h2 {
+            margin-bottom: 4rem;
+            color: #27ae60;
+            font-size: 2.5rem;
+        }
+
+        .steps {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .step {
+            flex: 1;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: scale(1.05);
+        }
+
+        .step i {
+            font-size: 2.5rem;
+            color: #27ae60;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 550px;
+            position: relative;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-150px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #27ae60;
+            outline: none;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 2rem;
+            background: #27ae60;
+            color: white;
+            text-align: center;
+        }
+
+        .testimonials h2 {
+            margin-bottom: 4rem;
+            font-size: 2.5rem;
+        }
+
+        .slider {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            padding: 2rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+
+        .slide.active {
+            display: block;
+            animation: fade 0.7s ease;
+        }
+
+        @keyframes fade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Footer */
+        footer {
+            background: #1a2521;
+            color: #ecf0f1;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .social-links a {
+            color: #27ae60;
+            margin: 0 1rem;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #219653;
+            transform: scale(1.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .nav-menu {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .feature-grid, .steps {
+                grid-template-columns: 1fr;
+            }
+            .modal-content {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">Green Force, Clean City!</a>
+            <div class="nav-menu">
+                <a href="home.html" class="nav-item">Home</a>
+                <a href="Report.html" class="nav-item">Report Issue</a>
+                <a href="Track.html" class="nav-item">Track Issues</a>
+                <a href="Admin.html" class="nav-item">Admin</a>
+                <a href="contact.html" class="nav-item">Contact</a>
+                <a href="Login.html" class="nav-item" onclick="openModal()">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Join the Force! Make Your City Cleaner & Greener!</h1>
+            <button class="cta-button">Report an Issue Now</button>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <h2>Our Core Solutions</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <i class="fas fa-city"></i>
+                <h3>Report Issues</h3>
+                <p>Easily report garbage, potholes, and pollution in your area</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-rocket"></i>
+                <h3>Track Complaints</h3>
+                <p>Get real-time updates on issue resolutions</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-leaf"></i>
+                <h3>Community Action</h3>
+                <p>Join volunteer programs and awareness campaigns</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <i class="fas fa-flag"></i>
+                <h3>1. Report</h3>
+                <p>Submit an issue with details</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-check"></i>
+                <h3>2. Verification</h3>
+                <p>Our team verifies the report</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-tools"></i>
+                <h3>3. Action</h3>
+                <p>Authorities address the problem</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-eye"></i>
+                <h3>4. Track</h3>
+                <p>Monitor progress in real-time</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login/Signup Modal -->
+    <div class="modal" id="auth-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <h2>Join the Force</h2>
+            <form id="auth-form">
+                <div class="form-group">
+                    <input type="text" id="name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="cta-button">Sign Up</button>
+                <div class="social-login">
+                    <button class="social-btn" style="background: #3b5998">Facebook</button>
+                    <button class="social-btn" style="background: #db4437">Google</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <h2>Community Voices</h2>
+        <div class="slider">
+            <div class="slide active">
+                <p>"Reported a garbage pile and it was cleared in just 2 days! Amazing platform."</p>
+                <p>- John D., Resident</p>
+            </div>
+            <div class="slide">
+                <p>"The community clean-up event was a huge success thanks to Green Force!"</p>
+                <p>- Sarah M., Volunteer</p>
+            </div>
+            <div class="slide">
+                <p>"Tracking my pothole complaint was so easy and transparent."</p>
+                <p>- Mike R., Citizen</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Green Force, Clean City! | <a href="#" style="color: #27ae60">Privacy Policy</a></p>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        // Modal Functions
+        function openModal() {
+            document.getElementById('auth-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+        }
+
+        // Form Validation
+        document.getElementById('auth-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!name || !email.match(/^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/) || password.length < 8) {
+                alert('Please fill all fields correctly. Password must be at least 8 characters.');
+                return;
+            }
+            GF.api('/api/auth/signup', {
+                method: 'POST',
+                body: JSON.stringify({ name: name.trim(), email: email.trim(), password: password })
+            }).then(function (d) {
+                GF.setSession(d);
+                alert('Welcome to Green Force, ' + d.name + '! Signup successful.');
+                closeModal();
+                window.location.reload();
+            }).catch(function (err) {
+                alert(err.message);
+            });
+        });
+
+        // Testimonial Slider
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+        }
+
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }, 4000);
+
+        // "Report an Issue Now" button had no action
+        document.querySelector('.hero .cta-button').addEventListener('click', function () {
+            window.location.href = 'Report.html';
+        });
+
+        // Social buttons inside the signup modal must not submit the form
+        document.querySelectorAll('.social-btn').forEach(function (btn) {
+            btn.type = 'button';
+            btn.addEventListener('click', function () {
+                if (btn.textContent.trim() === 'Google') { window.location.href = 'Login.html'; }
+                else { alert('Facebook login is not available. Please sign up with email or use Google.'); }
+            });
+        });
+
+        // Scroll Animation for Navbar
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.padding = '1rem 2rem';
+            } else {
+                navbar.style.padding = '1.5rem 2rem';
+            }
+        });
+    </script>
+<script src="auth.js"></script>
+</body>
+</html>

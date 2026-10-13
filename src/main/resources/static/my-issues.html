@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Issues - Green Force, Clean City!</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',Arial,sans-serif}
+  body{background:#f5f7f6;color:#333;padding-top:100px}
+  .navbar{background:rgba(255,255,255,.98);padding:1.5rem 2rem;position:fixed;top:0;width:100%;z-index:1000;box-shadow:0 4px 15px rgba(0,0,0,.05)}
+  .nav-container{max-width:1300px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+  .nav-brand{color:#27ae60;font-size:2rem;font-weight:700;text-decoration:none}
+  .nav-menu{display:flex;gap:2rem}
+  .nav-item{color:#333;text-decoration:none;font-weight:500;font-size:1.1rem}
+  .nav-item:hover{color:#27ae60}
+  .wrap{max-width:900px;margin:0 auto;padding:20px}
+  h1{color:#27ae60;text-align:center;margin-bottom:20px}
+  .item{background:#fff;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.08);padding:16px;margin-bottom:14px;display:flex;gap:14px}
+  .item img{width:110px;height:90px;object-fit:cover;border-radius:8px;background:#ddd;flex-shrink:0}
+  .item h3{color:#27ae60;margin-bottom:4px}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;color:#fff;font-size:.8rem;font-weight:700}
+  .Issued{background:#e74c3c}.Verified{background:#8e44ad}.InProgress{background:#f39c12}.Solved{background:#2ecc71}
+  .muted{color:#777;font-size:.9rem;margin-top:5px}
+  .tl{margin-top:8px;border-left:3px solid #27ae60;padding-left:12px}
+  .tl div{margin-bottom:6px}
+  button{padding:7px 12px;border:none;border-radius:6px;background:#27ae60;color:#fff;cursor:pointer;margin-top:8px}
+  button.sec{background:#7f8c8d}
+  .pager{display:flex;justify-content:center;gap:12px;align-items:center;margin-top:16px}
+  #msg{text-align:center;color:#c0392b;margin:10px}
+  .empty{text-align:center;color:#777;margin-top:30px}
+  @media(max-width:768px){.nav-menu{gap:1rem}.nav-item{font-size:.9rem}.nav-brand{font-size:1.3rem}}
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="nav-container">
+  <a href="#" class="nav-brand">Green Force, Clean City!</a>
+  <div class="nav-menu">
+    <a href="home.html" class="nav-item">Home</a>
+    <a href="Report.html" class="nav-item">Report Issue</a>
+    <a href="Track.html" class="nav-item">Track Issues</a>
+    <a href="Admin.html" class="nav-item">Admin</a>
+    <a href="contact.html" class="nav-item">Contact</a>
+    <a href="Login.html" class="nav-item">Login</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <h1>My Reported Issues</h1>
+  <div id="msg"></div>
+  <div id="list"></div>
+  <div class="pager">
+    <button class="sec" id="prev">Previous</button><span id="pageInfo"></span><button class="sec" id="next">Next</button>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var page = 0, totalPages = 0;
+
+  if (!GF.getToken()) { window.location.href = 'Login.html'; return; }
+
+  function el(tag, text, cls) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined && text !== null) e.textContent = text;
+    return e;
+  }
+  function fmt(t) { return t ? new Date(t).toLocaleString() : ''; }
+
+  function item(i) {
+    var box = el('div', null, 'item');
+    if (i.imageUrl) { var im = el('img'); im.src = i.imageUrl; im.alt = ''; box.appendChild(im); }
+    var body = el('div');
+    body.appendChild(el('h3', i.category + '  (' + i.trackingCode + ')'));
+    body.appendChild(el('span', i.status, 'badge ' + i.status.replace(/\s/g, '')));
+    body.appendChild(el('div', i.description, 'muted'));
+    body.appendChild(el('div', 'Reported: ' + fmt(i.createdAt), 'muted'));
+    var tl = el('div', null, 'tl'); tl.style.display = 'none';
+    var btn = el('button', 'View progress');
+    btn.onclick = function () {
+      if (tl.style.display === 'block') { tl.style.display = 'none'; btn.textContent = 'View progress'; return; }
+      tl.textContent = 'Loading...'; tl.style.display = 'block'; btn.textContent = 'Hide progress';
+      GF.api('/api/issues/' + i.id + '/history').then(function (h) {
+        tl.textContent = '';
+        h.forEach(function (u) {
+          var r = el('div');
+          r.appendChild(el('strong', u.to));
+          r.appendChild(el('span', '  ' + fmt(u.at) + (u.note ? ' - ' + u.note : ''), 'muted'));
+          tl.appendChild(r);
+        });
+      }).catch(function (e) { tl.textContent = e.message; });
+    };
+    body.appendChild(btn); body.appendChild(tl);
+    box.appendChild(body);
+    return box;
+  }
+
+  function load() {
+    $('msg').textContent = '';
+    GF.api('/api/issues/mine?page=' + page + '&size=8').then(function (d) {
+      var list = $('list'); list.textContent = '';
+      if (d.totalElements === 0) {
+        var p = el('p', null, 'empty');
+        p.appendChild(document.createTextNode('You have not reported any issue while logged in yet. '));
+        var a = el('a', 'Report one now'); a.href = 'Report.html'; p.appendChild(a);
+        list.appendChild(p);
+      }
+      d.content.forEach(function (i) { list.appendChild(item(i)); });
+      totalPages = d.totalPages;
+      $('pageInfo').textContent = d.totalElements ? 'Page ' + (d.page + 1) + ' of ' + d.totalPages : '';
+      $('prev').disabled = d.page <= 0; $('next').disabled = d.page + 1 >= d.totalPages;
+    }).catch(function (e) {
+      if (!GF.getToken()) { window.location.href = 'Login.html'; return; }   // token was rejected
+      $('msg').textContent = e.message;
+    });
+  }
+
+  $('prev').onclick = function () { if (page > 0) { page--; load(); } };
+  $('next').onclick = function () { if (page + 1 < totalPages) { page++; load(); } };
+  load();
+})();
+</script>
+</body>
+</html>

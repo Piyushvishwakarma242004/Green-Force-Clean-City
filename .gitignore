@@ -1,0 +1,13 @@
+target/
+data/
+uploads/
+*.log
+.idea/
+*.iml
+.vscode/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+application-local.properties

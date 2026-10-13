@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Green Force, Clean City!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #007bff, #00c3ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+            padding-top: 100px; /* Added to prevent overlap with fixed navbar */
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 1.5rem 2rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            color: #27ae60;
+            font-size: 2rem;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-item {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #27ae60;
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .nav-item:hover {
+            color: #27ae60;
+        }
+
+        .contact-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: slideIn 1s ease-in-out;
+        }
+
+        h2 {
+            color: #ffffff;
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #f1f1f1;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .contact-item {
+            margin: 10px 0;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.4s;
+            cursor: pointer;
+            width: 100%;
+            max-width: 350px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .contact-item i {
+            font-size: 22px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .social-icons a {
+            font-size: 28px;
+            color: white;
+            background: rgba(255, 255, 255, 0.3);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: 0.4s;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            background: white;
+            color: #007bff;
+            transform: scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .contact-container {
+                padding: 20px;
+            }
+
+            .contact-item {
+                font-size: 16px;
+            }
+
+            .social-icons a {
+                font-size: 24px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .nav-menu {
+                gap: 1.5rem;
+            }
+
+            .nav-item {
+                font-size: 1rem;
+            }
+
+            .nav-brand {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">Green Force, Clean City!</a>
+            <div class="nav-menu">
+                <a href="home.html" class="nav-item">Home</a>
+                <a href="Report.html" class="nav-item">Report Issue</a>
+                <a href="Track.html" class="nav-item">Track Issues</a>
+                <a href="Admin.html" class="nav-item">Admin</a>
+                <a href="contact.html" class="nav-item">Contact</a>
+                <a href="Login.html" class="nav-item" onclick="openModal()">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="contact-container">
+        <h2>📞 Contact Me</h2>
+        <p>Let's connect! Reach out anytime.</p>
+
+        <!-- Call Button -->
+        <a href="tel:+918817044261" class="contact-item">
+            <i class="fa-solid fa-phone"></i> Call: +91 8817044261
+        </a>
+
+        <!-- WhatsApp Button -->
+        <a href="https://wa.me/918817044261" class="contact-item">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp: Chat Now
+        </a>
+
+        <!-- Email Button -->
+        <a href="mailto:vishwakarmanilesh845@gmail.com" class="contact-item">
+            <i class="fa-solid fa-envelope"></i> Email: Click to Mail
+        </a>
+
+        <!-- Social Media Links -->
+        <h3 style="margin-top: 20px; color: #ffffff;">Follow Me</h3>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://twitter.com/" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+            <a href="https://www.linkedin.com/in/nilesh-vishwakarma-1059ab273/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://github.com/" target="_blank"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.youtube.com/" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+          
+        </div>
+    </div>
+
+
+    <script>
+        // Placeholder function for Login modal
+        function openModal() {
+            alert('Login modal would open here');
+        }
+    </script>
+<script src="auth.js"></script>
+</body>
+</html>

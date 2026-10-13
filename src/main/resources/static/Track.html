@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Reporting Dashboard | Green Force, Clean City!</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #004d99, #00bfff);
+            color: white;
+            padding-top: 100px; /* Added to prevent overlap with fixed navbar */
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 1.5rem 2rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            color: #27ae60;
+            font-size: 2rem;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-item {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #27ae60;
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .nav-item:hover {
+            color: #27ae60;
+        }
+
+        h2 {
+            font-size: 30px;
+            text-align: center;
+            margin: 30px 0;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .issue-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        .issue-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .issue-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .btn-block {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 1.5rem;
+            }
+            .nav-item {
+                font-size: 1rem;
+            }
+            .nav-brand {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">Green Force, Clean City!</a>
+            <div class="nav-menu">
+                <a href="home.html" class="nav-item">Home</a>
+                <a href="Report.html" class="nav-item">Report Issue</a>
+                <a href="Track.html" class="nav-item">Track Issues</a>
+                <a href="Admin.html" class="nav-item">Admin</a>
+                <a href="contact.html" class="nav-item">Contact</a>
+                <a href="Login.html" class="nav-item" onclick="openModal()">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <h2>Report & Track City Issues</h2>
+
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <a href="water.html?category=water" style="text-decoration: none; color: inherit;">
+                    <div class="issue-section">
+                        <h4 class="issue-title">💧 Water Issues</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="water.html?category=mosquito" style="text-decoration: none; color: inherit;">
+                    <div class="issue-section">
+                        <h4 class="issue-title">🦟 Mosquito Issues</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="water.html?category=garbage" style="text-decoration: none; color: inherit;">
+                    <div class="issue-section">
+                        <h4 class="issue-title">🗑️ Garbage Issues</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="water.html?category=pothole" style="text-decoration: none; color: inherit;">
+                    <div class="issue-section">
+                        <h4 class="issue-title">🛑 Pothole Issues</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="water.html?category=streetlight" style="text-decoration: none; color: inherit;">
+                    <div class="issue-section">
+                        <h4 class="issue-title">💡 Streetlight Issues</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="water.html?category=other" style="text-decoration: none; color: inherit;">
+                    <div class="issue-section">
+                        <h4 class="issue-title">⚠️ Other Issues</h4>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Placeholder function for Login modal
+        function openModal() {
+            alert('Login modal would open here');
+        }
+    </script>
+<script src="auth.js"></script>
+</body>
+</html>
