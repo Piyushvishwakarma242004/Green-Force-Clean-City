@@ -295,17 +295,30 @@
                 $('#modalLocation').val('Location requires HTTPS or localhost');
             } else if (navigator.geolocation) {
                 $('#modalLocation').val('Fetching location...');
-                navigator.geolocation.getCurrentPosition(function(position) {
+                const setLocation = function(position) {
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
                     $('#modalLocation').val(`Lat: ${lat}, Lon: ${lon}`);
-                }, function(error) {
+                };
+                const showLocationError = function(error) {
                     const messages = {
                         1: 'Location permission denied. Allow it in browser settings.',
-                        2: 'Location unavailable. Check GPS/location services and retry.',
+                        2: 'Location unavailable. Turn on Location Services and Wi-Fi, then retry.',
                         3: 'Location request timed out. Please retry.'
                     };
                     $('#modalLocation').val(messages[error.code] || 'Unable to fetch location. Please retry.');
+                };
+                navigator.geolocation.getCurrentPosition(setLocation, function(error) {
+                    if (error.code === 2 || error.code === 3) {
+                        $('#modalLocation').val('Trying approximate location...');
+                        navigator.geolocation.getCurrentPosition(setLocation, showLocationError, {
+                            enableHighAccuracy: false,
+                            timeout: 30000,
+                            maximumAge: 60000
+                        });
+                        return;
+                    }
+                    showLocationError(error);
                 }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
             } else {
                 $('#modalLocation').val('Geolocation not supported');
