@@ -286,17 +286,27 @@
                 }
                 $('#modalDescription').attr('placeholder', placeholder);
             });
+
+            $('#reportModal').on('shown.bs.modal', getLocation);
         });
 
         function getLocation() {
-            if (navigator.geolocation) {
+            if (!window.isSecureContext) {
+                $('#modalLocation').val('Location requires HTTPS or localhost');
+            } else if (navigator.geolocation) {
+                $('#modalLocation').val('Fetching location...');
                 navigator.geolocation.getCurrentPosition(function(position) {
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
                     $('#modalLocation').val(`Lat: ${lat}, Lon: ${lon}`);
                 }, function(error) {
-                    $('#modalLocation').val('Unable to fetch location');
-                });
+                    const messages = {
+                        1: 'Location permission denied. Allow it in browser settings.',
+                        2: 'Location unavailable. Check GPS/location services and retry.',
+                        3: 'Location request timed out. Please retry.'
+                    };
+                    $('#modalLocation').val(messages[error.code] || 'Unable to fetch location. Please retry.');
+                }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
             } else {
                 $('#modalLocation').val('Geolocation not supported');
             }
